@@ -490,70 +490,95 @@ const now = new Date();
 document.getElementById('headerDate').textContent =
   now.getFullYear() + '.' + String(now.getMonth()+1).padStart(2,'0') + '.' + String(now.getDate()).padStart(2,'0');
 
-const newsData = [
-  { title: "코스피, 외국인 순매수에 2,490선 회복…반도체 강세", desc: "외국인 투자자들이 삼성전자·SK하이닉스 등 반도체 대형주를 집중 매수하며 코스피가 장 중 2,490선을 회복했다.", source: "매일경제", date: "30분 전", category: "주식", badge: "badge-up", badgeText: "▲ 상승" },
-  { title: "서울 아파트 매매가 3주 연속 상승…강남 3구 주도", desc: "한국부동산원에 따르면 서울 아파트 매매가격지수가 3주 연속 상승세를 이어가고 있다. 강남·서초·송파 등 강남 3구가 상승세를 주도하는 모습이다.", source: "조선비즈", date: "1시간 전", category: "부동산", badge: "badge-up", badgeText: "▲ 상승" },
-  { title: "원·달러 환율 1,342원대…달러 강세 지속", desc: "원·달러 환율이 1,340원대 중반을 유지하고 있다. 미국 연준의 금리 인하 지연 우려로 달러 강세가 이어지는 분위기다.", source: "한국경제", date: "1시간 전", category: "환율", badge: null, badgeText: null },
-  { title: "삼성전자 HBM4 양산 본격화…AI 반도체 수요 급증", desc: "삼성전자가 차세대 고대역폭 메모리 HBM4의 양산을 본격화했다. AI 데이터센터 수요 급증에 맞춰 생산 능력을 대폭 확대할 계획이다.", source: "전자신문", date: "2시간 전", category: "반도체", badge: "badge-up", badgeText: "▲ 호재" },
-  { title: "소비자물가 2.8% 상승…농산물 가격 안정세", desc: "지난달 소비자물가지수가 전년 동기 대비 2.8% 상승했다. 농산물 가격이 안정세를 보이며 전월 대비 상승폭이 줄었다.", source: "연합뉴스", date: "3시간 전", category: "물가", badge: null, badgeText: null },
-  { title: "국내 주요 은행 예금금리 줄인하…수신 경쟁 완화", desc: "시중 5대 은행이 정기예금 금리를 일제히 인하했다. 한국은행 기준금리 동결 속에서도 자금 조달 비용 절감을 위한 움직임이 이어지고 있다.", source: "파이낸셜뉴스", date: "3시간 전", category: "금리", badge: "badge-down", badgeText: "▼ 인하" },
-  { title: "현대차·기아, 1분기 영업이익 3.8조…역대 최고", desc: "현대자동차그룹이 올해 1분기 합산 영업이익 3조 8천억원을 기록하며 역대 최고치를 경신했다. 하이브리드 차량 판매 호조가 실적을 이끌었다.", source: "서울경제", date: "4시간 전", category: "주식", badge: "badge-up", badgeText: "▲ 최고" },
-  { title: "정부, 반도체 특화단지 세액공제 확대 검토", desc: "정부가 반도체 국가첨단전략산업 특화단지에 대한 세액공제 혜택을 확대하는 방안을 검토 중이다. 글로벌 반도체 경쟁에서 우위를 점하기 위한 지원책이 강화될 전망이다.", source: "아시아경제", date: "5시간 전", category: "반도체", badge: null, badgeText: null },
-  { title: "외국인, 국내 채권 4개월 연속 순매수…안전자산 수요", desc: "외국인 투자자들이 4개월 연속으로 국내 채권을 순매수하고 있다. 원화 채권의 안정성과 상대적으로 높은 금리가 매력 요인으로 작용하고 있다.", source: "머니투데이", date: "6시간 전", category: "금리", badge: "badge-up", badgeText: "▲ 유입" },
-  { title: "국내 스타트업 투자 회복세…1분기 1.2조 유치", desc: "올해 1분기 국내 스타트업 투자 규모가 1조 2천억원을 기록하며 전년 동기 대비 18% 증가했다. AI·바이오 분야에 투자가 집중됐다.", source: "벤처스퀘어", date: "7시간 전", category: "주식", badge: null, badgeText: null }
-];
+// 카테고리 → 검색 키워드 매핑
+const tagKeywords = {
+  '전체': '주식 경제',
+  '주식': '주식 코스피',
+  '부동산': '부동산 아파트',
+  '환율': '환율 달러',
+  '금리': '금리 한국은행',
+  '반도체': '반도체 삼성전자',
+  '물가': '물가 소비자물가'
+};
 
 let currentTag = '전체';
 let currentQuery = '';
 
-function renderNews(data) {
+function stripHtml(html) {
+  return html.replace(/<[^>]*>/g, '').replace(/&quot;/g,'"').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
+}
+
+function timeAgo(dateStr) {
+  try {
+    const diff = Math.floor((new Date() - new Date(dateStr)) / 60000);
+    if (diff < 1) return '방금 전';
+    if (diff < 60) return diff + '분 전';
+    if (diff < 1440) return Math.floor(diff/60) + '시간 전';
+    return Math.floor(diff/1440) + '일 전';
+  } catch { return ''; }
+}
+
+function renderNews(items) {
   const grid = document.getElementById('newsGrid');
-  document.getElementById('newsCount').textContent = data.length + '건';
-  if (!data.length) {
+  document.getElementById('newsCount').textContent = items.length + '건';
+  if (!items.length) {
     grid.innerHTML = `<div class="empty">검색 결과가 없습니다.</div>`;
     return;
   }
-  grid.innerHTML = data.map((item, i) => `
-    <a class="news-card" href="#" target="_blank" style="animation-delay:${i*0.05}s">
-      <div class="news-category">● ${item.category}</div>
-      <h3>${item.title}</h3>
-      <p>${item.desc}</p>
+  grid.innerHTML = items.map((item, i) => `
+    <a class="news-card" href="${item.link}" target="_blank" rel="noopener" style="animation-delay:${i*0.05}s">
+      <div class="news-category">● 주식/경제</div>
+      <h3>${stripHtml(item.title)}</h3>
+      <p>${stripHtml(item.description)}</p>
       <div class="news-meta">
-        <span class="news-source">${item.source}</span>
-        <span class="news-date">${item.date}</span>
-        ${item.badge ? `<span class="card-badge ${item.badge}">${item.badgeText}</span>` : ''}
+        <span class="news-source">네이버 뉴스</span>
+        <span class="news-date">${timeAgo(item.pubDate)}</span>
       </div>
     </a>
   `).join('');
 }
 
+function showLoading() {
+  document.getElementById('newsGrid').innerHTML = `
+    <div class="empty">
+      <div style="margin-bottom:12px;font-size:24px;">⏳</div>
+      뉴스를 불러오는 중...
+    </div>`;
+}
+
+async function fetchNews(keyword) {
+  showLoading();
+  try {
+    const res = await fetch(`/api/news?query=${encodeURIComponent(keyword)}`);
+    const data = await res.json();
+    renderNews(data.items || []);
+  } catch (e) {
+    document.getElementById('newsGrid').innerHTML = `
+      <div class="empty">뉴스를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</div>`;
+  }
+}
+
 function setTag(tag, el) {
   currentTag = tag;
+  currentQuery = '';
+  document.getElementById('searchInput').value = '';
   document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
-  applyFilter();
+  fetchNews(tagKeywords[tag] || tag);
 }
 
 function filterNews() {
   currentQuery = document.getElementById('searchInput').value.trim();
-  applyFilter();
-}
-
-function applyFilter() {
-  let filtered = newsData;
-  if (currentTag !== '전체') filtered = filtered.filter(n => n.category === currentTag);
-  if (currentQuery) {
-    const q = currentQuery.toLowerCase();
-    filtered = filtered.filter(n => n.title.toLowerCase().includes(q) || n.desc.toLowerCase().includes(q));
-  }
-  renderNews(filtered);
+  if (!currentQuery) return;
+  fetchNews(currentQuery);
 }
 
 document.getElementById('searchInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') filterNews();
 });
 
-renderNews(newsData);
+// 초기 로드
+fetchNews(tagKeywords['전체']);
 </script>
 </body>
 </html>
