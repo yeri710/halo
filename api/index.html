@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>경제 뉴스</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #111118;
+  --surface2: #1a1a24;
+  --border: rgba(255,255,255,0.07);
+  --text: #ffffff;
+  --text-muted: #9ea7b4;
+  --text-dim: #4e5968;
+  --accent: #3182f6;
+  --accent2: #f59e0b;
+  --red: #f04452;
+  --blue: #3182f6;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans KR', -apple-system, sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -200px; left: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(49,130,246,0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Header */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,10,15,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-badge {
+  background: var(--accent);
+  color: #000;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+.logo-text { font-size: 16px; font-weight: 700; }
+.header-date { font-size: 12px; color: var(--text-muted); }
+
+/* Hero */
+.hero {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 56px 24px 32px;
+  position: relative;
+  z-index: 1;
+}
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #3182f6;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.hero-label::before {
+  content: '';
+  display: block;
+  width: 6px; height: 6px;
+  background: #3182f6;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+}
+.hero h1 span {
+  background: linear-gradient(135deg, #3182f6, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub { font-size: 14px; color: var(--text-muted); }
+
+/* Search */
+.search-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 28px;
+  position: relative;
+  z-index: 1;
+}
+.search-box {
+  display: flex;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 8px 8px 8px 20px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-box:focus-within {
+  border-color: rgba(49,130,246,0.5);
+  box-shadow: 0 0 0 3px rgba(49,130,246,0.08);
+}
+.search-box input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+}
+.search-box input::placeholder { color: var(--text-dim); }
+.search-btn {
+  background: #3182f6;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.search-btn:hover { opacity: 0.85; }
+.search-btn:active { transform: scale(0.97); }
+
+/* Tags */
+.tags {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 28px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+.tag {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  background: var(--surface);
+}
+.tag:hover { border-color: rgba(49,130,246,0.4); color: var(--text); }
+.tag.active {
+  background: rgba(49,130,246,0.15);
+  border-color: rgba(49,130,246,0.5);
+  color: #60a5fa;
+}
+
+/* Main */
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Ticker */
+.ticker-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 12px 0;
+  margin-bottom: 36px;
+}
+.ticker {
+  display: flex;
+  gap: 40px;
+  animation: ticker 30s linear infinite;
+  white-space: nowrap;
+}
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.ticker-item .name { color: var(--text); font-weight: 600; }
+.ticker-item .up { color: var(--accent); }
+.ticker-item .down { color: var(--red); }
+
+/* Section */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.section-count { font-size: 12px; color: var(--text-dim); }
+
+/* Featured card */
+.featured-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s;
+  text-decoration: none;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+.featured-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: linear-gradient(180deg, #3182f6, #60a5fa);
+}
+.featured-card:hover {
+  border-color: rgba(49,130,246,0.3);
+  transform: translateY(-1px);
+}
+.featured-tag {
+  font-size: 10px;
+  font-weight: 700;
+  color: #3182f6;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.featured-card h2 {
+  font-size: clamp(17px, 2.5vw, 22px);
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 10px;
+  word-break: keep-all;
+}
+.featured-card p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  word-break: keep-all;
+}
+.card-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+.card-source {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: var(--surface2);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.card-date { font-size: 11px; color: var(--text-dim); }
+.card-badge { margin-left: auto; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
+.badge-up { background: rgba(49,130,246,0.12); color: #60a5fa; }
+.badge-down { background: rgba(240,68,82,0.12); color: #f04452; }
+.badge-hot { background: rgba(245,158,11,0.12); color: var(--accent2); }
+
+/* Divider */
+.divider { height: 1px; background: var(--border); margin: 36px 0; }
+
+/* News grid */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+}
+.news-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 22px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s, background 0.2s;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeUp 0.4s ease both;
+}
+.news-card:hover {
+  border-color: rgba(49,130,246,0.2);
+  background: var(--surface2);
+  transform: translateY(-2px);
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.news-category {
+  font-size: 10px;
+  font-weight: 700;
+  color: #3182f6;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.news-card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.55;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+  flex: 1;
+}
+.news-card p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: keep-all;
+}
+.news-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+.news-source { font-size: 10px; font-weight: 600; color: var(--text-dim); }
+.news-date { font-size: 10px; color: var(--text-dim); }
+
+/* Empty */
+.empty {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 60px 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  .hero { padding: 40px 20px 24px; }
+  .featured-card { padding: 20px; }
+  .news-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-badge">ECO</span>
+      <span class="logo-text">경제 뉴스</span>
+    </div>
+    <div class="header-date" id="headerDate"></div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-label">실시간 업데이트</div>
+  <h1>오늘의 <span>경제 뉴스</span></h1>
+  <p class="hero-sub">주요 경제 이슈를 한눈에 확인하세요</p>
+</div>
+
+<div class="search-container">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="키워드로 뉴스 검색... (예: 삼성전자, 금리, 환율)" />
+    <button class="search-btn" onclick="filterNews()">검색</button>
+  </div>
+</div>
+
+<div class="tags">
+  <div class="tag active" onclick="setTag('전체', this)">전체</div>
+  <div class="tag" onclick="setTag('주식', this)">📈 주식</div>
+  <div class="tag" onclick="setTag('부동산', this)">🏠 부동산</div>
+  <div class="tag" onclick="setTag('환율', this)">💱 환율</div>
+  <div class="tag" onclick="setTag('금리', this)">🏦 금리</div>
+  <div class="tag" onclick="setTag('반도체', this)">💻 반도체</div>
+  <div class="tag" onclick="setTag('물가', this)">🛒 물가</div>
+</div>
+
+<div class="main">
+
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span class="ticker-item"><span class="name">코스피</span> 2,487.32 <span class="up">▲ 12.4</span></span>
+      <span class="ticker-item"><span class="name">코스닥</span> 712.18 <span class="down">▼ 3.2</span></span>
+      <span class="ticker-item"><span class="name">원/달러</span> 1,342.50 <span class="up">▲ 5.8</span></span>
+      <span class="ticker-item"><span class="name">삼성전자</span> 73,400 <span class="up">▲ 800</span></span>
+      <span class="ticker-item"><span class="name">SK하이닉스</span> 158,200 <span class="down">▼ 1,200</span></span>
+      <span class="ticker-item"><span class="name">현대차</span> 241,500 <span class="up">▲ 3,000</span></span>
+      <span class="ticker-item"><span class="name">WTI</span> $78.34 <span class="down">▼ 0.42</span></span>
+      <span class="ticker-item"><span class="name">금</span> $2,312.10 <span class="up">▲ 18.4</span></span>
+      <span class="ticker-item"><span class="name">코스피</span> 2,487.32 <span class="up">▲ 12.4</span></span>
+      <span class="ticker-item"><span class="name">코스닥</span> 712.18 <span class="down">▼ 3.2</span></span>
+      <span class="ticker-item"><span class="name">원/달러</span> 1,342.50 <span class="up">▲ 5.8</span></span>
+      <span class="ticker-item"><span class="name">삼성전자</span> 73,400 <span class="up">▲ 800</span></span>
+      <span class="ticker-item"><span class="name">SK하이닉스</span> 158,200 <span class="down">▼ 1,200</span></span>
+      <span class="ticker-item"><span class="name">현대차</span> 241,500 <span class="up">▲ 3,000</span></span>
+      <span class="ticker-item"><span class="name">WTI</span> $78.34 <span class="down">▼ 0.42</span></span>
+      <span class="ticker-item"><span class="name">금</span> $2,312.10 <span class="up">▲ 18.4</span></span>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-title">헤드라인</div>
+  </div>
+
+  <a class="featured-card" href="#" target="_blank">
+    <div class="featured-tag">🔥 오늘의 톱뉴스</div>
+    <h2>한국은행, 기준금리 3.25% 동결 결정…"물가·성장 균형 고려"</h2>
+    <p>한국은행 금융통화위원회가 이날 정례회의에서 기준금리를 현 수준인 3.25%로 유지하기로 결정했다. 이는 시장 예상에 부합하는 결과로, 향후 금리 인하 시점에 대한 관심이 쏠리고 있다.</p>
+    <div class="card-footer">
+      <span class="card-source">한국경제</span>
+      <span class="card-date">2시간 전</span>
+      <span class="card-badge badge-hot">🔥 HOT</span>
+    </div>
+  </a>
+
+  <div class="divider"></div>
+
+  <div class="section-header">
+    <div class="section-title">경제 뉴스</div>
+    <div class="section-count" id="newsCount">10건</div>
+  </div>
+
+  <div class="news-grid" id="newsGrid"></div>
+</div>
+
+<script>
+const now = new Date();
+document.getElementById('headerDate').textContent =
+  now.getFullYear() + '.' + String(now.getMonth()+1).padStart(2,'0') + '.' + String(now.getDate()).padStart(2,'0');
+
+const newsData = [
+  { title: "코스피, 외국인 순매수에 2,490선 회복…반도체 강세", desc: "외국인 투자자들이 삼성전자·SK하이닉스 등 반도체 대형주를 집중 매수하며 코스피가 장 중 2,490선을 회복했다.", source: "매일경제", date: "30분 전", category: "주식", badge: "badge-up", badgeText: "▲ 상승" },
+  { title: "서울 아파트 매매가 3주 연속 상승…강남 3구 주도", desc: "한국부동산원에 따르면 서울 아파트 매매가격지수가 3주 연속 상승세를 이어가고 있다. 강남·서초·송파 등 강남 3구가 상승세를 주도하는 모습이다.", source: "조선비즈", date: "1시간 전", category: "부동산", badge: "badge-up", badgeText: "▲ 상승" },
+  { title: "원·달러 환율 1,342원대…달러 강세 지속", desc: "원·달러 환율이 1,340원대 중반을 유지하고 있다. 미국 연준의 금리 인하 지연 우려로 달러 강세가 이어지는 분위기다.", source: "한국경제", date: "1시간 전", category: "환율", badge: null, badgeText: null },
+  { title: "삼성전자 HBM4 양산 본격화…AI 반도체 수요 급증", desc: "삼성전자가 차세대 고대역폭 메모리 HBM4의 양산을 본격화했다. AI 데이터센터 수요 급증에 맞춰 생산 능력을 대폭 확대할 계획이다.", source: "전자신문", date: "2시간 전", category: "반도체", badge: "badge-up", badgeText: "▲ 호재" },
+  { title: "소비자물가 2.8% 상승…농산물 가격 안정세", desc: "지난달 소비자물가지수가 전년 동기 대비 2.8% 상승했다. 농산물 가격이 안정세를 보이며 전월 대비 상승폭이 줄었다.", source: "연합뉴스", date: "3시간 전", category: "물가", badge: null, badgeText: null },
+  { title: "국내 주요 은행 예금금리 줄인하…수신 경쟁 완화", desc: "시중 5대 은행이 정기예금 금리를 일제히 인하했다. 한국은행 기준금리 동결 속에서도 자금 조달 비용 절감을 위한 움직임이 이어지고 있다.", source: "파이낸셜뉴스", date: "3시간 전", category: "금리", badge: "badge-down", badgeText: "▼ 인하" },
+  { title: "현대차·기아, 1분기 영업이익 3.8조…역대 최고", desc: "현대자동차그룹이 올해 1분기 합산 영업이익 3조 8천억원을 기록하며 역대 최고치를 경신했다. 하이브리드 차량 판매 호조가 실적을 이끌었다.", source: "서울경제", date: "4시간 전", category: "주식", badge: "badge-up", badgeText: "▲ 최고" },
+  { title: "정부, 반도체 특화단지 세액공제 확대 검토", desc: "정부가 반도체 국가첨단전략산업 특화단지에 대한 세액공제 혜택을 확대하는 방안을 검토 중이다. 글로벌 반도체 경쟁에서 우위를 점하기 위한 지원책이 강화될 전망이다.", source: "아시아경제", date: "5시간 전", category: "반도체", badge: null, badgeText: null },
+  { title: "외국인, 국내 채권 4개월 연속 순매수…안전자산 수요", desc: "외국인 투자자들이 4개월 연속으로 국내 채권을 순매수하고 있다. 원화 채권의 안정성과 상대적으로 높은 금리가 매력 요인으로 작용하고 있다.", source: "머니투데이", date: "6시간 전", category: "금리", badge: "badge-up", badgeText: "▲ 유입" },
+  { title: "국내 스타트업 투자 회복세…1분기 1.2조 유치", desc: "올해 1분기 국내 스타트업 투자 규모가 1조 2천억원을 기록하며 전년 동기 대비 18% 증가했다. AI·바이오 분야에 투자가 집중됐다.", source: "벤처스퀘어", date: "7시간 전", category: "주식", badge: null, badgeText: null }
+];
+
+let currentTag = '전체';
+let currentQuery = '';
+
+function renderNews(data) {
+  const grid = document.getElementById('newsGrid');
+  document.getElementById('newsCount').textContent = data.length + '건';
+  if (!data.length) {
+    grid.innerHTML = `<div class="empty">검색 결과가 없습니다.</div>`;
+    return;
+  }
+  grid.innerHTML = data.map((item, i) => `
+    <a class="news-card" href="#" target="_blank" style="animation-delay:${i*0.05}s">
+      <div class="news-category">● ${item.category}</div>
+      <h3>${item.title}</h3>
+      <p>${item.desc}</p>
+      <div class="news-meta">
+        <span class="news-source">${item.source}</span>
+        <span class="news-date">${item.date}</span>
+        ${item.badge ? `<span class="card-badge ${item.badge}">${item.badgeText}</span>` : ''}
+      </div>
+    </a>
+  `).join('');
+}
+
+function setTag(tag, el) {
+  currentTag = tag;
+  document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  applyFilter();
+}
+
+function filterNews() {
+  currentQuery = document.getElementById('searchInput').value.trim();
+  applyFilter();
+}
+
+function applyFilter() {
+  let filtered = newsData;
+  if (currentTag !== '전체') filtered = filtered.filter(n => n.category === currentTag);
+  if (currentQuery) {
+    const q = currentQuery.toLowerCase();
+    filtered = filtered.filter(n => n.title.toLowerCase().includes(q) || n.desc.toLowerCase().includes(q));
+  }
+  renderNews(filtered);
+}
+
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') filterNews();
+});
+
+renderNews(newsData);
+</script>
+</body>
+</html>
