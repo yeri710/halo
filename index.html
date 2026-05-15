@@ -187,7 +187,11 @@ header {
   border: 1px solid var(--border);
   color: var(--text-muted);
   background: var(--surface);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
+.tag svg { flex-shrink: 0; }
 .tag:hover { border-color: rgba(49,130,246,0.4); color: var(--text); }
 .tag.active {
   background: rgba(49,130,246,0.15);
@@ -441,13 +445,46 @@ header {
 </div>
 
 <div class="tags">
-  <div class="tag active" onclick="setTag('전체', this)">전체</div>
-  <div class="tag" onclick="setTag('주식', this)">📈 주식</div>
-  <div class="tag" onclick="setTag('부동산', this)">🏠 부동산</div>
-  <div class="tag" onclick="setTag('환율', this)">💱 환율</div>
-  <div class="tag" onclick="setTag('금리', this)">🏦 금리</div>
-  <div class="tag" onclick="setTag('반도체', this)">💻 반도체</div>
-  <div class="tag" onclick="setTag('물가', this)">🛒 물가</div>
+  <div class="tag active" onclick="setTag('전체', this)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    전체
+  </div>
+  <div class="tag" onclick="setTag('주식', this)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+    주식
+  </div>
+  <div class="tag" onclick="setTag('부동산', this)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    부동산
+  </div>
+  <div class="tag" onclick="setTag('환율', this)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="6" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="18"/></svg>
+    환율
+  </div>
+  <div class="tag" onclick="setTag('금리', this)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+    금리
+  </div>
+  <div class="tag" onclick="setTag('반도체', this)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M9 7V4M12 7V4M15 7V4M9 20v-3M12 20v-3M15 20v-3M4 9h3M4 12h3M4 15h3M17 9h3M17 12h3M17 15h3"/></svg>
+    반도체
+  </div>
+  <div class="tag" onclick="setTag('물가', this)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    물가
+  </div>
+  <div class="tag" onclick="setTag('삼성전자', this)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-width="3"/></svg>
+    삼성전자
+  </div>
+  <div class="tag" onclick="setTag('하이닉스', this)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="10" ry="4"/><path d="M2 12c0 4 4.5 7 10 7s10-3 10-7"/><path d="M2 12c0-4 4.5-7 10-7s10 3 10 7"/></svg>
+    SK하이닉스
+  </div>
+  <div class="tag" onclick="setTag('현대차', this)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h11l5 5v5h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+    현대차
+  </div>
 </div>
 
 <div class="main">
@@ -495,7 +532,10 @@ const tagKeywords = {
   '환율': '환율 달러',
   '금리': '금리 한국은행',
   '반도체': '반도체 삼성전자',
-  '물가': '물가 소비자물가'
+  '물가': '물가 소비자물가',
+  '삼성전자': '삼성전자 주가',
+  '하이닉스': 'SK하이닉스 주가',
+  '현대차': '현대차 주가'
 };
 
 let currentTag = '전체';
