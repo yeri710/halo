@@ -535,7 +535,7 @@ function createCard(item, i) {
 
 function appendNews(items) {
   const grid = document.getElementById('newsGrid');
-  // 로딩 스피너 제거
+  // 로딩 스피너 항상 먼저 제거
   const spinner = document.getElementById('loadingSpinner');
   if (spinner) spinner.remove();
 
@@ -553,13 +553,11 @@ function appendNews(items) {
   totalLoaded += items.length;
   document.getElementById('newsCount').textContent = totalLoaded + '건';
 
-  // 20개 미만이면 더 이상 없음
   if (items.length < 20) {
     hasMore = false;
     if (totalLoaded > 0) {
       const end = document.createElement('div');
-      end.className = 'empty';
-      end.style.gridColumn = '1/-1';
+      end.style.cssText = 'grid-column:1/-1;text-align:center;padding:30px 0;color:var(--text-dim);font-size:13px;';
       end.textContent = '모든 뉴스를 불러왔습니다.';
       grid.appendChild(end);
     }
@@ -586,8 +584,7 @@ async function fetchNews(keyword, start = 1) {
   if (isLoading) return;
   isLoading = true;
 
-  if (start === 1) showInitialLoading();
-  else addLoadingSpinner();
+  if (start > 1) addLoadingSpinner();
 
   try {
     const res = await fetch(`/api/news?query=${encodeURIComponent(keyword)}&start=${start}`);
