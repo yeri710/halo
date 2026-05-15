@@ -28,7 +28,15 @@ export default async function handler(req, res) {
       return;
     }
 
-    const data = await response.json();
+    const text = await response.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch(e) {
+      res.status(500).json({ error: 'JSON 파싱 오류', raw: text.slice(0, 200) });
+      return;
+    }
+
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ error: '뉴스를 불러오지 못했습니다.', message: error.message });
