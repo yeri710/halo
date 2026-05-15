@@ -568,11 +568,7 @@ function appendNews(items) {
 
 function showInitialLoading() {
   const grid = document.getElementById('newsGrid');
-  grid.innerHTML = `
-    <div class="empty">
-      <div style="margin-bottom:12px;font-size:24px;">⏳</div>
-      뉴스를 불러오는 중...
-    </div>`;
+  grid.innerHTML = '';
 }
 
 function addLoadingSpinner() {
