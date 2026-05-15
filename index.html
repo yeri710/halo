@@ -577,11 +577,12 @@ function showInitialLoading() {
 
 function addLoadingSpinner() {
   const grid = document.getElementById('newsGrid');
+  const existing = document.getElementById('loadingSpinner');
+  if (existing) existing.remove();
   const spinner = document.createElement('div');
   spinner.id = 'loadingSpinner';
-  spinner.className = 'empty';
-  spinner.style.gridColumn = '1/-1';
-  spinner.innerHTML = '<div style="font-size:20px;">⏳</div>';
+  spinner.style.cssText = 'grid-column:1/-1;text-align:center;padding:30px 0;color:var(--text-dim);font-size:13px;';
+  spinner.innerHTML = '⏳ 불러오는 중...';
   grid.appendChild(spinner);
 }
 
